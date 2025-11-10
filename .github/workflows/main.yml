@@ -21,7 +21,7 @@ env:
 # BOARD: SD_CARD-Buildroot-RV1103_Luckfox_Pico_WebBee-IPC
 # BOARD: SD_CARD-Buildroot-RV1106_Luckfox_Pico_Pro_Max-IPC
 # BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_Mini-IPC
- BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_Plus-IPC
+  BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_Plus-IPC
 # BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_WebBee-IPC
 # BOARD: SPI_NAND-Buildroot-RV1106_Luckfox_Pico_Pro_Max-IPC
 # BOARD: SPI_NAND-Busybox-RV1106_Luckfox_Pico_Pro_Max-IPC_FASTBOOT
@@ -51,6 +51,7 @@ jobs:
       - name: Configure and build firmware for ${{ env.BOARD }}
         run: |
           ln -sf project/cfg/BoardConfig_IPC/BoardConfig-${{ env.BOARD }}.mk .BoardConfig.mk
+          chmod +x ./build.sh
           ./build.sh allsave
 
       - name: Upload results
