@@ -1,0 +1,60 @@
+name: luckfox-rv1103
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:    
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_86Panel-IPC
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_86Panel_W-IPC
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_Pi-IPC
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_Pi_W-IPC
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_Ultra-IPC
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_Ultra_W-IPC
+# BOARD: EMMC-Buildroot-RV1106_Luckfox_Pico_Zero-IPC
+# BOARD: EMMC-Busybox-RV1106_Luckfox_Pico_Ultra-IPC_FASTBOOT
+# BOARD: SD_CARD-Buildroot-RV1103_Luckfox_Pico-IPC
+# BOARD: SD_CARD-Buildroot-RV1103_Luckfox_Pico_Mini-IPC
+# BOARD: SD_CARD-Buildroot-RV1103_Luckfox_Pico_Plus-IPC
+# BOARD: SD_CARD-Buildroot-RV1103_Luckfox_Pico_WebBee-IPC
+# BOARD: SD_CARD-Buildroot-RV1106_Luckfox_Pico_Pro_Max-IPC
+# BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_Mini-IPC
+ BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_Plus-IPC
+# BOARD: SPI_NAND-Buildroot-RV1103_Luckfox_Pico_WebBee-IPC
+# BOARD: SPI_NAND-Buildroot-RV1106_Luckfox_Pico_Pro_Max-IPC
+# BOARD: SPI_NAND-Busybox-RV1106_Luckfox_Pico_Pro_Max-IPC_FASTBOOT
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: apt update/upgrade
+        run: DEBIAN_FRONTEND=noninteractive sudo apt-get update
+
+      - name: Install packages to satisfy build dependencies
+        run: DEBIAN_FRONTEND=noninteractive sudo apt-get install -y git ssh make gcc gcc-multilib g++-multilib module-assistant expect g++ gawk texinfo libssl-dev bison flex fakeroot cmake unzip gperf autoconf device-tree-compiler libncurses5-dev pkg-config bc python-is-python3 passwd openssl openssh-server openssh-client vim file cpio rsync
+
+    #   - name: Checkout luckfox-pico repository
+    #     uses: actions/checkout@v4
+    #     with:
+    #       repository: LuckfoxTECH/luckfox-pico
+    #       ref: main
+    #       path: luckfox-pico
+    #       fetch-depth: 1
+
+      - name: Configure and build firmware for ${{ env.BOARD }}
+        run: |
+          cd luckfox-pico
+          chmod +x tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh 
+          source tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh 
+          ln -sf project/cfg/BoardConfig_IPC/BoardConfig-${{ env.BOARD }}.mk .BoardConfig.mk
+          ./build.sh allsave
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-${{ env.BOARD }}
+          path: output/**/*
