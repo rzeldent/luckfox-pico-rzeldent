@@ -37,13 +37,10 @@ jobs:
       - name: Install packages to satisfy build dependencies
         run: DEBIAN_FRONTEND=noninteractive sudo apt-get install -y git ssh make gcc gcc-multilib g++-multilib module-assistant expect g++ gawk texinfo libssl-dev bison flex fakeroot cmake unzip gperf autoconf device-tree-compiler libncurses5-dev pkg-config bc python-is-python3 passwd openssl openssh-server openssh-client vim file cpio rsync
 
-    #   - name: Checkout luckfox-pico repository
-    #     uses: actions/checkout@v4
-    #     with:
-    #       repository: LuckfoxTECH/luckfox-pico
-    #       ref: main
-    #       path: luckfox-pico
-    #       fetch-depth: 1
+      - name: Checkout luckfox-pico repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
     #          chmod +x tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh
     #          source tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh
