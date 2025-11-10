@@ -45,11 +45,11 @@ jobs:
     #       path: luckfox-pico
     #       fetch-depth: 1
 
+    #          chmod +x tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh
+    #          source tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh
+
       - name: Configure and build firmware for ${{ env.BOARD }}
         run: |
-          cd luckfox-pico
-          chmod +x tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh 
-          source tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/env_install_toolchain.sh 
           ln -sf project/cfg/BoardConfig_IPC/BoardConfig-${{ env.BOARD }}.mk .BoardConfig.mk
           ./build.sh allsave
 
